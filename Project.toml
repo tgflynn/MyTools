@@ -1,0 +1,4 @@
+name = "MyTools"
+uuid = "ed002842-2f7b-45d5-a19b-08a5d08a3b4d"
+authors = ["Timothy G. Flynn <tgflynn@users.noreply.github.com>"]
+version = "0.1.0"
