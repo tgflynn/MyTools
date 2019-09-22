@@ -2,6 +2,38 @@ module MyTools
 
 using InteractiveUtils
 
+export where
+
+function all_loaded_modules()
+	modules = []
+	for mod in Base.loaded_modules_array()
+		for name in names(mod, all=true)
+			#println("name = ", name)
+			if ! isdefined(mod, name)
+				continue
+			end
+			obj = getfield(mod, name)
+			if isa(obj, Module)
+				push!(modules, obj)
+			end
+		end
+	end
+	return modules
+end
+
+"""
+Returns an array of all loaded modules in which the symbol x is defined. 
+"""
+function where(x::Symbol)
+	modules = []
+ 	for mod in all_loaded_modules()
+		if isdefined(mod, x)
+			push!(modules, mod)
+		end
+	end
+	return modules
+end
+
 function subtypes(t::DataType; recurse::Bool = false)
     #println("MyTools.subtypes: recurse = ", recurse)
     stypes = InteractiveUtils.subtypes(t)
@@ -14,7 +46,7 @@ function subtypes(t::DataType; recurse::Bool = false)
             end
         end
     end
-    return stypes
+    return unique(stypes)
 end
 
 function discover_interface(t::DataType)
@@ -30,7 +62,5 @@ function discover_interface(t::DataType)
 
     return sort(collect(countmap), by = x->last(x), rev=true)
 end
-
-
 
 end # module
